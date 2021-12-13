@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="./css/styles.css" type="text/css">
+        <title>Practica</title>
+    </head>
+    <body>
+    <div id="container"></div>
+
+    <script>
+
+        // Funciom Crea componentes
+        const component = (strings, ...dynamicValues)=> {
+            console.log(strings)
+            let auxContent = strings.slice();
+            return (props) => {
+                dynamicValues.forEach((value,index)=>{
+                    auxContent[index] += props[value];
+                    console.log(auxContent[index],index)
+                });
+                return auxContent.join('');
+            }
+        }
+            
+        
+        // Tags html considerados para dar estilos
+        const tags = ['h1','h2','div','strong','main','section']
+
+        // Crea mi objeto que permite ingresar estilos y su contenido
+        const styles = (tags)=>{
+            let styles = {}
+            tags.forEach((tag,index)=>{
+                styles[tag] = (styles) => {
+                    return (content)=>{
+                        return `<${tag} style="${styles}">
+                                    ${content}
+                                </${tag}>`
+                    }
+                }
+            });
+            return styles;
+        }
+        const styled = styles(tags)
+        
+        // Dando estilos par los tags h1, main, section
+        const titleStyle = styled.h1`
+            color: red;
+        `
+        const mainStyle = styled.main`
+            background: pink;
+            inline-size: 200px;
+            block-size: 200px;
+        `
+        const sectionStyle = styled.section`
+            background: green;
+            inline-size: 100px;
+            block-size:100px;
+        `
+        
+        // Creando componente de prueba
+        const props = {
+            message: 'No te rindas',
+        }
+        const title = component`${'message'}`(props);
+        
+        const main = 'Main';
+        const section = 'Section';
+        
+
+        const render = (component, container)=> {
+            container.innerHTML += component;
+        }
+
+        // Rendirizando componente de prueba
+        render(titleStyle(title),window.container)
+        render(mainStyle(main),window.container)
+        render(sectionStyle(section),window.container)
+    </script>
+    </body>
+</html>
